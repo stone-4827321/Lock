@@ -312,4 +312,4 @@
 
 ## 性能比较
 
-![](/Users/3kmac/Desktop/我的文档/图片/Lock_性能比较.png)
+![](https://github.com/stone-4827321/Lock/blob/master/Images/Lock_%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83.png)
