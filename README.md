@@ -312,4 +312,4 @@
 
 ## 性能比较
 
-![](http://github.com/stone-4827321/Lock/blob/master/Images/Lock_%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83.png)
+  ![](https://github.com/stone-4827321/CALayer/blob/master/Images/CALayer_%E5%9D%90%E6%A0%87%E7%B3%BB.png)
