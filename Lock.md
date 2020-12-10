@@ -1,10 +1,8 @@
-# Lock
-
-## 概述
+# 概述
 
 - 在多线程编程时，需要将线程不安全的代码 “锁” 起来。保证一段代码或者多段代码操作的原子性，保证多个线程对同一个数据的访问**同步 (Synchronization)**。
 
-## 原子性
+# 原子性
 
 - 原子操作是指不会被线程调度机制打断的操作；这种操作一旦开始，就一直运行到结束，中间不会有任何上下文切换。
 
@@ -30,7 +28,7 @@
 
 - **在做多线程安全的时候，并不是通过给 property 加 `atomic` 关键字来保障安全，而是将 property 声明为`nonatomic`（没有 getter，setter 的锁开销），然后自己加锁**。
 
-## 自旋锁
+# 自旋锁
 
 - 自旋锁属于 **busy-waiting** 类型的锁。存在一个线程间共享的标记变量，当某个线程进入临界区后，变量被标记，此时其他线程再想进入临界区，会进入 `while` 循环中空转等待。
 
@@ -46,13 +44,13 @@
 
 - 自旋锁的开销主要在：如果临界区需要执行较长时间，空转的代码会导致 CPU 在等待期间是满负荷执行的。
 
-### OSSpinLock
+## OSSpinLock
 
 - `OSSpinLock` 由于存在优先级反转问题，已经在 iOS10 中被废弃。
 
   > 自旋锁都存在的问题：如果一个低优先级的线程获得锁并访问共享资源，这时一个高优先级的线程也尝试获得这个锁，它会处于 spin lock 的忙等状态从而占用大量 CPU。此时低优先级线程无法与高优先级线程争夺 CPU 时间，从而导致任务迟迟完不成、无法释放 lock。
 
-## 互斥锁
+# 互斥锁
 
 - 互斥锁属于 **sleep-waiting** 类型的锁。存在一个线程间共享的标记变量，当某个线程进入临界区后，变量被标记，此时其他线程再想进入临界区，会进入休眠等待状态。
 
@@ -64,7 +62,7 @@
   - 递归锁是一种可以多次被同一线程持有的锁，会记录上锁和解锁的次数，当二者平衡的时候，才会释放锁，其它线程才可以上锁成功。
   - 非递归锁是只能一个线程锁定一次，想要再次锁定，就必须先要解锁，否则线程会因为等待锁的释放而进入睡眠状态，就不可能再释放锁，从而导致死锁。
 
-### os_unfair_lock
+## os_unfair_lock
 
 - 非递归锁。
 
@@ -81,7 +79,7 @@
   os_unfair_lock_unlock(&lock);
   ```
 
-### pthread_mutex
+## pthread_mutex
 
 - 由 pthread 提供一组跨平台的锁方案，除了创建互斥锁，还可以创建递归锁、读写锁、once 等锁。
 
@@ -138,7 +136,7 @@
     - `pthread_cond_broadcast()`：发送信号，唤醒所有正在等待的线程；
     - `pthread_cond_destroy()`：销毁条件。
 
-### NSLock
+## NSLock
 
 - 非递归锁，遵守 `NSLocking` 协议。
 
@@ -155,13 +153,13 @@
 
 - 尝试加锁且不会堵塞线程：`tryLock` 尝试加锁，如果失败的话返回 NO，`lockBeforeDate:` 是在指定时间之前尝试加锁，如果在指定时间之前都不能加锁，则返回NO。
 
-### NSRecursiveLock
+## NSRecursiveLock
 
 - 递归锁，遵守 `NSLocking` 协议，用法和 `NSLock` 完全一致。
 
 - 对 `pthread_mutex` 锁的简单封装，设置属性 `pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);`。
 
-### NSCondition
+## NSCondition
 
 - 非递归锁，遵守 `NSLocking` 协议，`NSLock` 升级版，在加解锁的基础上增加等待和激活的方法（使用 pthread_mutex 条件）：
 
@@ -200,7 +198,7 @@
   ```
 
 
-### NSConditionLock 
+## NSConditionLock 
 
 - 非递归锁，遵守 `NSLocking` 协议，`NSConditionLock` 升级版，可以让线程仅在满足特定条件时才能获取锁（`_condition_value` 属性）：
 
@@ -232,7 +230,7 @@
   }
   ```
 
-### @synchronized
+## @synchronized
 
 - 对象锁，互斥型，可递归（基于 `mutex`）。
 
@@ -248,7 +246,7 @@
 
   - `@synchronized(nil)` 不起任何作用。
 
-## 信号量
+# 信号量
 
 - 信号量为 GCD 中的 `dispatch_semaphore`。
 - 信号量和互斥量的区别：
@@ -256,11 +254,11 @@
   - 一个信号量可以实现多个同类资源的多线程互斥和同步。当信号量为单值信号量时，也可以完成一个资源的互斥访问。
 
 
-## 读写锁
+# 读写锁
 
 - 当多个线程操作一个文件的时候，如果同时进行读写的话，会造成读的内容不完全等问题。一种方案是使用互斥锁，但此时即使是读出数据（相当于操作临界区资源）都要上互斥锁。更加优化的方案应该是**利用读写锁实现多读单写**——在同一时间可以有多条线程在读取文件内容，但是只能有一条线程执行写文件的操作。
 
-###  pthread_rwlock_t
+##  pthread_rwlock_t
 
 - `pthread_rwlock_t` 是由 pthread 提供读写锁方案。
 
@@ -310,6 +308,6 @@
   ```
 
 
-## 性能比较
+# 性能比较
 
 ![](https://tva1.sinaimg.cn/large/0081Kckwgy1gk4t2wtqi8j30tg0j075s.jpg)
