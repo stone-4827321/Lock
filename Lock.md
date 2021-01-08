@@ -310,4 +310,4 @@
 
 # 性能比较
 
-![image](https://tva1.sinaimg.cn/large/0081Kckwgy1gk4t2wtqi8j30tg0j075s.jpg)
+![](https://github.com/stone-4827321/Lock/blob/master/Images/Lock_%E6%80%A7%E8%83%BD%E6%AF%94%E8%BE%83.png)
